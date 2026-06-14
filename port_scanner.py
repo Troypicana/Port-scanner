@@ -1,10 +1,16 @@
 import socket
 
-# Define the target domain name or IP address that you want to scan.
-target = "scanme.nmap.org"
+# Prompt the user to type a website or IP address and store it as a string.
+target = input("Enter the target IP or website to scan: ")
 
 # Create a list containing the specific TCP port numbers you want to check.
-ports = range(1, 1025)
+port_input = input("Enter range of ports to scan (e.g. 1-1024): ")
+
+# Split the string at the hyphen into a starting string and ending string.
+start_port, end_port = port_input.split("-")
+
+# Convert the split strings into integers and create a loopable range (adding 1 to include the last port).
+ports = range(int(start_port), int(end_port) + 1)
 
 # Start a loop to iterate through each port number inside your ports list.
 for port in ports:
@@ -22,12 +28,6 @@ for port in ports:
         # Print a message to the terminal stating that the current port is open.
         print(f"Port {port}: Open")
 
-    # Execute this block if the connection attempt returned any non-zero error code.
-    else:
-        # Print a message to the terminal stating that the current port is closed.
-        print(f"Port {port}: Closed")
-
     # Terminate the socket connection to free up system operating memory and resources.
     sock.close()
 
-# Making sure uploading to github works correctly
