@@ -58,3 +58,6 @@ with ThreadPoolExecutor(max_workers=100) as executor:
         if output is not None:
             # Print the open port message
             print(output)
+
+# Pause execution until the user presses Enter
+input("Press enter to exit...")
