@@ -33,4 +33,3 @@ The scanner will display only the open ports it finds.
 
 - This scanner is a personal learning project and does not replace tools like `nmap`.
 - Be careful when scanning networks and always follow ethical guidelines.
-- Currently, the port range is set to (1, 1024). Passing a port larger than 1024 will not return a result. This is subject to change but will stay for now.
