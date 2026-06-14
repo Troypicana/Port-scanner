@@ -30,8 +30,17 @@ def scan_port(port):
 
         # Evaluate if the connection attempt returned an error code of zero (success).
         if result == 0:
-        # Print a message to the terminal stating that the current port is open.
-            return(f"Port {port}: Open")
+            
+            # Wrap the service lookup in a try-except block to handle errors.
+            try:
+                # Get the service name for the specific port.
+                service_name = socket.getservbyport(port, "tcp")
+            # If service name isn't found, set to "Unknown"
+            except OSError:
+                service_name = "Unknown"
+
+        # Print a message to the terminal stating that the current port is open and which service is running.
+            return(f"Port {port}: Open ({service_name})")
         else:
         # Return None (or a string) so the thread pool knows the port is closed.)
             return None
