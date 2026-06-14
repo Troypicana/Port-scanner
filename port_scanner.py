@@ -30,3 +30,4 @@ for port in ports:
     # Terminate the socket connection to free up system operating memory and resources.
     sock.close()
 
+# Making sure uploading to github works correctly
