@@ -1,4 +1,6 @@
 import socket
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 
 # Prompt the user to type a website or IP address and store it as a string.
 target = input("Enter the target IP or website to scan: ")
@@ -12,22 +14,38 @@ start_port, end_port = port_input.split("-")
 # Convert the split strings into integers and create a loopable range (adding 1 to include the last port).
 ports = range(int(start_port), int(end_port) + 1)
 
-# Start a loop to iterate through each port number inside your ports list.
-for port in ports:
+# Scan ports using a thread pool
+def scan_port(port):
     # Initialize a new IPv4 (AF_INET) and TCP (SOCK_STREAM) socket object for this port.
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Restrict the socket to wait a maximum of 1.0 second for a network response.
-    sock.settimeout(1.0)
+    # Use a try block to safely run the connection attempt.
+    try:
 
-    # Attempt to connect to the target host and port, returning an error code integer.
-    result = sock.connect_ex((target, port))
+        # Restrict the socket to wait a maximum of 1.0 second for a network response.
+        sock.settimeout(1.0)
 
-    # Evaluate if the connection attempt returned an error code of zero (success).
-    if result == 0:
+        # Attempt to connect to the target host and port, returning an error code integer.
+        result = sock.connect_ex((target, port))
+
+        # Evaluate if the connection attempt returned an error code of zero (success).
+        if result == 0:
         # Print a message to the terminal stating that the current port is open.
-        print(f"Port {port}: Open")
-
+            return(f"Port {port}: Open")
+        else:
+        # Return None (or a string) so the thread pool knows the port is closed.)
+            return None
+    # The finally block will always run, ensuring the socket is closed after the return.
+    finally:
     # Terminate the socket connection to free up system operating memory and resources.
-    sock.close()
+        sock.close()
 
+with ThreadPoolExecutor(max_workers=100) as executor:
+    results = executor.map(scan_port, ports)
+
+    # Loop through compiled results from all finished threads.
+    for output in results:
+        # Check if the thread returned a result (i.e., the port is open).
+        if output is not None:
+            # Print the open port message
+            print(output)
