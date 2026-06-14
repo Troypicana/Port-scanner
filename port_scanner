@@ -1,0 +1,32 @@
+import socket
+
+# Define the target domain name or IP address that you want to scan.
+target = "scanme.nmap.org"
+
+# Create a list containing the specific TCP port numbers you want to check.
+ports = range(1, 1025)
+
+# Start a loop to iterate through each port number inside your ports list.
+for port in ports:
+    # Initialize a new IPv4 (AF_INET) and TCP (SOCK_STREAM) socket object for this port.
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Restrict the socket to wait a maximum of 1.0 second for a network response.
+    sock.settimeout(1.0)
+
+    # Attempt to connect to the target host and port, returning an error code integer.
+    result = sock.connect_ex((target, port))
+
+    # Evaluate if the connection attempt returned an error code of zero (success).
+    if result == 0:
+        # Print a message to the terminal stating that the current port is open.
+        print(f"Port {port}: Open")
+
+    # Execute this block if the connection attempt returned any non-zero error code.
+    else:
+        # Print a message to the terminal stating that the current port is closed.
+        print(f"Port {port}: Closed")
+
+    # Terminate the socket connection to free up system operating memory and resources.
+    sock.close()
+
