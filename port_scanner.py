@@ -30,17 +30,34 @@ def scan_port(port):
 
         # Evaluate if the connection attempt returned an error code of zero (success).
         if result == 0:
-            
+
+            try:
+                # Send a simple request to the server to get the banner
+                sock.send(b"\r\n")
+
+                # Receive the banner from the server 
+                banner = sock.recv(1024).decode().strip()
+
+            # If an error occurs when grabbing banner, set to empty string.
+            except:
+                banner = ""
+
             # Wrap the service lookup in a try-except block to handle errors.
             try:
                 # Get the service name for the specific port.
                 service_name = socket.getservbyport(port, "tcp")
+
             # If service name isn't found, set to "Unknown"
             except OSError:
                 service_name = "Unknown"
 
         # Print a message to the terminal stating that the current port is open and which service is running.
-            return(f"Port {port}: Open ({service_name})")
+        # Also display the banner if available.
+            if banner:
+                return(f"Port {port}: Open ({service_name}), Banner: {banner}")
+            else:
+                return(f"Port {port}: Open ({service_name})")
+
         else:
         # Return None (or a string) so the thread pool knows the port is closed.)
             return None
