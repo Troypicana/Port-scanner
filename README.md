@@ -13,6 +13,7 @@ This tool is intended for educational use only.
 ## What it does
 
 The script attempts to connect to TCP ports on a target host and reports which ports are open.
+Will also grab a banner from the server for each service (if available) to give you the exact version of the service that is running.
 
 ## Usage
 
